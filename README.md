@@ -37,7 +37,7 @@ Simply, "zigfy" runs by default the Javascript code above for all elements selec
 Options
 =======
 Here are the options you can pass to "zigfy" (with their default value):
-  * ""resize"": "true" - whether to respond to resize events automatically
+  * **resize**: *true* - whether to respond to resize events automatically
   * ""layout"": "'maximize'" - the layout to use
     * "maximize" stretches the image so that it cover the whole container
     * "full" puts the whole image in the container, whatever its size
