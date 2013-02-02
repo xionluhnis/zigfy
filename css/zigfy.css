@@ -1,0 +1,48 @@
+.zigfy {
+  overflow: hidden;
+  background: #333;
+}
+.zigfy img {
+  border: 5px solid white;
+}
+.zigfy-cover {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+.zigfy-flash {
+  background: white;
+}
+.zigfy-maps {
+  background: transparent url(../images/raster.png);
+}
+.zigfy-prev, .zigfy-next {
+  display: block;
+  position: absolute;
+  top: 0px;
+  height: 100%;
+  width: 100px;
+  cursor: pointer;
+  opacity: 0.3;
+}
+.zigfy-prev:hover, .zigfy-next:hover {
+  opacity: 1.0;
+}
+.zigfy-prev {
+  left: 0px;
+  background: transparent url(../images/left.png) center center no-repeat;
+}
+.zigfy-prev:hover {
+  background: rgba(0, 0, 0, 0.1) url(../images/left.png) center center no-repeat;
+}
+
+.zigfy-next {
+  right: 0px;
+  background: transparent url(../images/right.png) center center no-repeat;
+}
+.zigfy-next:hover {
+  background: rgba(0, 0, 0, 0.1) url(../images/right.png) center center no-repeat;
+}
