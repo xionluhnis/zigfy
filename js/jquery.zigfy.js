@@ -1,5 +1,5 @@
 // zigfy, Z Image Gallery plugin for JQuery
-// version 0.1
+// version 0.2
 // (c) 2013 Alexandre Kaspar [xion.luhnis@gmail.com]
 // released under the MIT license
 
@@ -426,7 +426,6 @@
 
       // we switch the mode
       self.mapMode = !self.mapMode;
-      console.log('Maps: ' + self.mapMode);
     },
 
     distF: function (t) { // easeInOutCubic
@@ -480,6 +479,25 @@
 
     options = $.extend({}, $.fn.zigfy.defaults, options);
 
+    // HTML data options
+    var $el = this;
+    for(var key in $.fn.zigfy.defaults){
+      var val = $el.data('zigfy-' + key);
+      if(val !== undefined){
+        switch(typeof $.fn.zigfy.defaults[key]){
+          case 'boolean':
+            options[key] = $.parseJSON(val.toString());
+            break;
+          case 'number':
+            options[key] = parseInt(val.toString(), 10);
+            break;
+          default:
+            options[key] = val.toString();
+        }
+      }
+    }
+
+
     function get(ele) {
       var zigfy = $.data(ele, 'zigfy');
       if (!zigfy) {
@@ -497,7 +515,7 @@
   };
 
   $.fn.zigfy.defaults = {
-    resize: true, // whether to respond to resize events automatically
+    resize: false, // whether to respond to resize events automatically
     layout: 'maximize', // or 'full' to show the full picture, in reduced size
     align: 'center', // or 'topleft', 'top', 'topright', 'left', 'right', 'bottomleft', 'bottom', 'bottomright'
     transition: 'fade', // or 'flash', or {init, before, after}
