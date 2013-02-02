@@ -30,7 +30,7 @@ Thus you can set parameters and configure each instance you want to create separ
 
 2. The HTML Way
 ===============
-By adding the class *zigfy* to the gallery containers (probably divs), and having them contain all the images you want (as `<img src=*path* />` HTML nodes of course).
+By adding the class *zigfy* to the gallery containers (probably divs), and having them contain all the images you want (as `<img src="path" />` HTML nodes of course).
 
 Simply, *zigfy* runs by default the Javascript code above for all elements selected by `$('.zigfy')`. That's it, nothing miracular here.
 
@@ -41,7 +41,7 @@ Here are the options you can pass to *zigfy* (with their default value):
   * **layout**: `'maximize'` - the layout to use
     * *maximize* stretches the image so that it cover the whole container
     * *full* puts the whole image in the container, whatever its size
-  * **align*: `'center'` - the alignment, one from:
+  * **align**: `'center'` - the alignment, one from:
     * *topleft*, 
     * *top*,
     * *topright*,
