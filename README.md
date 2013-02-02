@@ -37,7 +37,7 @@ Simply, *zigfy* runs by default the Javascript code above for all elements selec
 Options
 =======
 Here are the options you can pass to *zigfy* (with their default value):
-  * **resize**: `true` - whether to respond to resize events automatically
+  * **resize**: `false` - whether to respond to resize events automatically
   * **layout**: `'maximize'` - the layout to use
     * *maximize* stretches the image so that it cover the whole container
     * *full* puts the whole image in the container, whatever its size
@@ -59,6 +59,14 @@ Here are the options you can pass to *zigfy* (with their default value):
   * **padding**: `10` - the overall padding for images in layout *full*, it makes sure that there is this amount of available, taking CSS borders into account
   * **mapMode**: `true` -  whether to enable the *map* mode, i.e. clicking to grab and see more, only for the *maximize* layout
   * **imgSelector**: `null` - the image selector to use instead of the element's images
+
+All the *boolean*, *string* and *number* options (of name `XXX`) can be passed via HTML using data paremeters `data-zigfy`.
+
+For example:
+  * To disable `showNav`, add `data-zigfy-showNav="false"`.
+  * To use the full layout, add `data-zigfy-layout="full"`.
+  * To use a 20px padding, add `data-zigfy-padding="20"`.
+  * To use a specific set of images, add for example `data-zigfy-imgSelector="#imgContainer > div > img"`.
 
 Examples
 ========
