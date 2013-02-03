@@ -70,7 +70,7 @@
     // layout
     var layout;
     if (typeof options.layout == 'function') layout = options.layout;
-    else layout = self[options.layout + 'Layout'] || self.maximize;
+    else layout = self[options.layout + 'Layout'] || self.maximizeLayout;
     self.layout = layout.bind(self);
 
     // alignment
