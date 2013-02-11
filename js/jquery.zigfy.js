@@ -533,9 +533,10 @@
     var $el = this;
     for(var key in $.fn.zigfy.defaults){
       var val = $el.data('zigfy-' + key);
-      if(val !== undefined){
+      if(val){
         switch(typeof $.fn.zigfy.defaults[key]){
           case 'boolean':
+            console.log('key=' + key + ', val=' + val + ', def=' + $.fn.zigfy.defaults[key]);
             options[key] = $.parseJSON(val.toString());
             break;
           case 'number':
