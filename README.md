@@ -82,7 +82,7 @@ $('.zigfy').zigfy('action1').zigfy('action2')...;
 
 Actions are method calls of Zigfy javascript objects. To have the list of all possible methods, you should look at `jquery.zigfy.js`.
 Here follow the most important ones:
-  * **clear**: remove all listeners which have been attached to that specific zigfy object (especially useful if you are removing the element from the DOM)
+  * **clear**: remove all listeners which have been attached to that specific zigfy object
   * **prev**, **next**: manually switch to the prev, or next image
   * **layout**: request layout of the current picture
   * **toggleNavigation**: manually toggle the navigation of pictures (`mapMode=true` is required)
