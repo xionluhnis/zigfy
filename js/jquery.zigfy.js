@@ -55,8 +55,12 @@
     var self = this;
     var $el = this.$el = $(element);
     this.options = options;
+    // we force-set the zigfy class
+    if(!options.noClass) $el.addClass('zigfy');
+    // loading class
+    $el.addClass('zigfy-loading');
     // we want an event namespace for this object
-    var eNS = this.__eventNS = '.zigfy-' + Math.random();
+    var eNS = this.__eventNS = options.eventNamespace === null ?  '.zigfy-' + Math.random() : options.eventNamespace;
 
     // finding the images
     var $imgs;
@@ -115,7 +119,7 @@
 
       // image creation
       var $img = $('<img />').data('index', index).css({
-        'display': index === self.index ? 'block' : 'none', // we only show the first one by default
+        'display': 'none', // we only show the first one by default
         'height': 'auto',
         'width': 'auto',
         'z-index': index + 1
@@ -186,12 +190,16 @@
     clear: function(){
       var eNS = this.__eventNS;
       if(!eNS) return;
-      $(window).off(eNS);
-      if(this.navPrev) this.navPrev.off(eNS);
-      if(this.navNext) this.navNext.off(eNS);
+      $(window).off('resize' + eNS);
+      if(this.navPrev) this.navPrev.off('click' + eNS);
+      if(this.navNext) this.navNext.off('click' + eNS);
       $(this.images).each(function(){
-        $(this).off(eNS);
+        $(this).off('click' + eNS);
       });
+      var $cover = this.$cover;
+      if($cover){
+        $cover.off('click' + eNS).off('mousemove' + eNS);
+      }
     },
 
     /**
@@ -389,11 +397,13 @@
     },
 
     preInit: function () {
+      this.$el.addClass('zigfy-loading');
       this.transition.before.call(this, this.index, this.lastIndex);
     },
 
     postInit: function () {
       this.transition.after.call(this, this.index, this.lastIndex);
+      this.$el.removeClass('zigfy-loading').addClass('zigfy-loaded');
     },
 
     prev: function () {
@@ -419,6 +429,7 @@
      */
     toggleNavigation: function () {
       var self = this;
+      var eNS = this.__eventNS;
       var $cover = self.$cover;
       // current mode?
       if (self.mapMode) {
@@ -428,16 +439,16 @@
         });
 
         // and stop the navigation
-        $cover.unbind('mousemove');
-        $cover.unbind('click');
+        $cover.off('mousemove' + eNS);
+        $cover.off('click' + eNS);
       } else {
         // we set the click back
-        $cover.bind('click', self.toggleNavigation.bind(self));
+        $cover.on('click' + eNS, self.toggleNavigation.bind(self));
         // we show the cover
         $cover.addClass('zigfy-maps').stop().fadeIn(500);
         $cover.css('cursor', 'move');
         // and bind the navigation event
-        $cover.bind('mousemove', self.navigate.bind(self));
+        $cover.on('mousemove' + eNS, self.navigate.bind(self));
       }
 
       // we switch the mode
@@ -541,7 +552,9 @@
     autoNavDuration: 5000, // timing for autoNav == true
     padding: 10, // to override CSS padding in 'full' mode, not used in 'zoom' mode
     mapMode: true, // whether to enable clicking to grab and see more, only for the 'zoom' mode
-    imgSelector: null // the image selector (null => img in HTML target)
+    imgSelector: null, // the image selector (null => img in HTML target)
+    noClass: false, // disable .zigfy CSS class auto-added to base element
+    eventNamespace: null // event namespace to use (by default a randomly generated .zigfy-{random} one
   };
 
   // Overwrite this method to provide options on a per-element basis.

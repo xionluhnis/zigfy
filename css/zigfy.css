@@ -38,7 +38,6 @@
 .zigfy-prev:hover {
   background: rgba(0, 0, 0, 0.1) url(../images/left.png) center center no-repeat;
 }
-
 .zigfy-next {
   right: 0px;
   background: transparent url(../images/right.png) center center no-repeat;

@@ -59,6 +59,8 @@ Here are the options you can pass to *zigfy* (with their default value):
   * **padding**: `10` - the overall padding for images in layout *full*, it makes sure that there is this amount of available, taking CSS borders into account
   * **mapMode**: `true` -  whether to enable the *map* mode, i.e. clicking to grab and see more, only for the *maximize* layout
   * **imgSelector**: `null` - the image selector to use instead of the element's images
+  * **noClass**: `false` - disable the automatic `zigfy` CSS class added to the base element
+  * **eventNamespace**: `null` - set the zigfy event namespace (used by `clear()`), by default `.zigfy-{Math.random()}`
 
 All the *boolean*, *string* and *number* options (of name `XXX`) can be passed via HTML using data paremeters `data-zigfy`.
 
@@ -86,6 +88,15 @@ Here follow the most important ones:
   * **prev**, **next**: manually switch to the prev, or next image
   * **layout**: request layout of the current picture
   * **toggleNavigation**: manually toggle the navigation of pictures (`mapMode=true` is required)
+
+Classes
+=======
+Several elements are used by *zigfy*, you can customize their look using CSS and their corresponding classes:
+  * `.zigfy` is added by default to the base element (unless `noClass=true`)
+  * `.zigfy-prev` and `.zigfy-next` are the UI elements
+  * `.zigfy-loading` is set on the base element while images are loading, but see also `.zigfy-loaded`
+  * `.zigfy-loaded` is set definitely on the base element after the first element has been laid out
+  * `.zigfy-maps` is the cover for *mapMode* navigation (see zigfy.css)
 
 Examples
 ========
