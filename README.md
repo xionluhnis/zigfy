@@ -56,6 +56,14 @@ Here are the options you can pass to *zigfy* (with their default value):
     * *flash*,
     * or an object with the three following function: `{init, before, after}`, see jquery.zigfy.js implementation of *fade* and *flash* to make your own
   * **showNav**: `true` - whether to show the left / right navigation buttons
+  * **navFunc**: `null` - navigation function `function(lastIndex, currentIndex, imageCount, dir)` which must return the new index where
+    * `lastIndex` is the last navigated index (`-1` at the beginning)
+    * `currentIndex` is the current index
+    * `imageCount` is the number of images in the gallery
+    * `dir` is the direction of navigation (`+1` or `-1`)
+    * `this` is referring to the current zigfy object (to use data if needed)
+  * **autoNav**: `false` - whether to automatically navigate with `next()` after a given time
+  * **autoNavDuration**: `12000` - the duration between auto navigation calls in milliseconds
   * **padding**: `10` - the overall padding for images in layout *full*, it makes sure that there is this amount of available, taking CSS borders into account
   * **mapMode**: `true` -  whether to enable the *map* mode, i.e. clicking to grab and see more, only for the *maximize* layout
   * **imgSelector**: `null` - the image selector to use instead of the element's images

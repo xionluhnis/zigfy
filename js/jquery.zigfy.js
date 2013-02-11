@@ -13,13 +13,13 @@
     fade: {
       init: function ( /* length */ ) {},
       before: function () {},
-      after: function () {
+      after: function (callback) {
         var self = this;
         self.$el.scrollTop(0);
         for (var i = 0; i < self.images.length; ++i) {
           var $img = self.images[i];
           // fade animation
-          if (i === self.index) $img.stop().fadeIn(500);
+          if (i === self.index) $img.stop().fadeIn(500, callback);
           else $img.stop().fadeOut(500);
         }
       }
@@ -38,13 +38,14 @@
         // hide all images first
         for (var i = 0; i < self.images.length; ++i) self.images[i].hide();
       },
-      after: function () {
+      after: function (callback) {
         var self = this;
         // show current image (behind white cover)
         self.images[self.index].show();
         // we fade out the white cover
         self.$cover.fadeOut(500, function () {
           self.$cover.removeClass('zigfy-flash');
+          callback();
         });
       }
     }
@@ -61,6 +62,12 @@
     $el.addClass('zigfy-loading');
     // we want an event namespace for this object
     var eNS = this.__eventNS = options.eventNamespace === null ?  '.zigfy-' + Math.random() : options.eventNamespace;
+
+    // prev/next navigation function
+    this.navFunc = options.navFunc || function(lastIndex, index, imageCount, dir){
+      if(dir > 0) return index >= imageCount - 1 ? 0 : index + 1;
+      else return index <= 0 ? imageCount - 1 : index - 1;
+    };
 
     // finding the images
     var $imgs;
@@ -200,6 +207,8 @@
       if($cover){
         $cover.off('click' + eNS).off('mousemove' + eNS);
       }
+      // clearing timeout
+      clearTimeout(this.autoNavTO);
     },
 
     /**
@@ -398,18 +407,31 @@
 
     preInit: function () {
       this.$el.addClass('zigfy-loading');
-      this.transition.before.call(this, this.index, this.lastIndex);
+      this.transition.before.call(this);
     },
 
     postInit: function () {
-      this.transition.after.call(this, this.index, this.lastIndex);
-      this.$el.removeClass('zigfy-loading').addClass('zigfy-loaded');
+      var self = this;
+      this.transition.after.call(this, function(){
+        self.$el.removeClass('zigfy-loading').addClass('zigfy-loaded');
+        // autoNav
+        if(self.options.autoNav && self.images.length >= 2){
+          // Note: we don't do autoNav if there is only 1 image!
+          // no retriggering!
+          clearTimeout(self.autoNavTO);
+          // delayed call
+          self.autoNavTO = setTimeout(function(){
+            self.next();
+          }, self.options.autoNavDuration);
+        }
+      });
     },
 
     prev: function () {
       var self = this;
-      var i = self.lastIndex = self.index;
-      self.index = i <= 0 ? self.images.length - 1 : i - 1;
+      var i = self.index;
+      self.index = self.navFunc.call(this, self.lastIndex, i, self.images.length, -1); // i <= 0 ? self.images.length - 1 : i - 1;
+      self.lastIndex = i;
       self.preInit();
       self.layout();
       if (self.isLoaded(self.index)) self.postInit();
@@ -417,8 +439,9 @@
 
     next: function () {
       var self = this;
-      var i = self.lastIndex = self.index;
-      self.index = i >= self.images.length - 1 ? 0 : i + 1;
+      var i = self.index;
+      self.index = self.navFunc.call(this, self.lastIndex, i, self.images.length, 1); // i >= self.images.length - 1 ? 0 : i + 1;
+      self.lastIndex = i;
       self.preInit();
       self.layout();
       if (self.isLoaded(self.index)) self.postInit();
@@ -547,9 +570,10 @@
     align: 'center', // or 'topleft', 'top', 'topright', 'left', 'right', 'bottomleft', 'bottom', 'bottomright'
     transition: 'fade', // or 'flash', or {init, before, after}
     showNav: true, // for the left / right navigation buttons
+    navFunc: null, // navigation function (return new index = function(last, curr, imageCount, dir))
     autoNav: false, // whether to have automatic navigation
-    autoNavBar: false, // whether to show a countdown navigation bar (only when autoNav == true
-    autoNavDuration: 5000, // timing for autoNav == true
+    autoNavBar: false, // whether to show a countdown navigation bar (only when autoNav == true) XXX to implement!
+    autoNavDuration: 12000, // timing for autoNav == true
     padding: 10, // to override CSS padding in 'full' mode, not used in 'zoom' mode
     mapMode: true, // whether to enable clicking to grab and see more, only for the 'zoom' mode
     imgSelector: null, // the image selector (null => img in HTML target)
