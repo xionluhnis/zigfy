@@ -75,7 +75,7 @@ Whereas options are passed under the form of an object such as:
 $('.zigfy').zigfy({opt1: val1, opt2: val2 ... });
 ```
 
-Action are called by:
+Actions are called by:
 ```javascript
 $('.zigfy').zigfy('action1').zigfy('action2')...;
 ```
