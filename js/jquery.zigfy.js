@@ -55,6 +55,8 @@
     var self = this;
     var $el = this.$el = $(element);
     this.options = options;
+    // we want an event namespace for this object
+    var eNS = this.__eventNS = '.zigfy-' + Math.random();
 
     // finding the images
     var $imgs;
@@ -129,7 +131,7 @@
         };
         // mapMode = map navigation on click
         if (options.mapMode) {
-          $img.click(function (e) {
+          $img.on('click' + eNS, function (e) {
             e.preventDefault();
             self.toggleNavigation();
           });
@@ -157,11 +159,11 @@
     if (options.showNav && images.length > 1) {
       // images are from z-index = 1 to images.length
       // => prev: images.length + 1
-      this.navPrev = $('<div class="zigfy-prev" />').css('z-index', images.length + 1).click(function () {
+      this.navPrev = $('<div class="zigfy-prev" />').css('z-index', images.length + 1).on('click' + eNS, function () {
         self.prev();
       }).appendTo($el);
       // => next: images.length + 2
-      this.navNext = $('<div class="zigfy-next" />').css('z-index', images.length + 2).click(function () {
+      this.navNext = $('<div class="zigfy-next" />').css('z-index', images.length + 2).on('click' + eNS, function () {
         self.next();
       }).appendTo($el);
     }
@@ -170,13 +172,27 @@
 
     // events
     if (options.resize) {
-      $(window).resize(function () {
+      $(window).on('resize' + eNS, function () {
         self.layout();
       });
     }
   }
 
   Zigfy.prototype = {
+
+    /**
+     * Global listener clear function
+     */
+    clear: function(){
+      var eNS = this.__eventNS;
+      if(!eNS) return;
+      $(window).off(eNS);
+      if(this.navPrev) this.navPrev.off(eNS);
+      if(this.navNext) this.navNext.off(eNS);
+      $(this.images).each(function(){
+        $(this).off(eNS);
+      });
+    },
 
     /**
      * Loaded check

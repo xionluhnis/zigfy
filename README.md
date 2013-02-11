@@ -68,6 +68,25 @@ For example:
   * To use a 20px padding, add `data-zigfy-padding="20"`.
   * To use a specific set of images, add for example `data-zigfy-imgSelector="#imgContainer > div > img"`.
 
+Actions
+=======
+Whereas options are passed under the form of an object such as:
+```javascript
+$('.zigfy').zigfy({opt1: val1, opt2: val2 ... });
+```
+
+Action are called by:
+```javascript
+$('.zigfy').zigfy('action1').zigfy('action2')...;
+```
+
+Actions are method calls of Zigfy javascript objects. To have the list of all possible methods, you should look at `jquery.zigfy.js`.
+Here follow the most important ones:
+  * **clear**: remove all listeners which have been attached to that specific zigfy object (especially useful if you are removing the element from the DOM)
+  * **prev**, **next**: manually switch to the prev, or next image
+  * **layout**: request layout of the current picture
+  * **toggleNavigation**: manually toggle the navigation of pictures (`mapMode=true` is required)
+
 Examples
 ========
 That's ... soon coming!
