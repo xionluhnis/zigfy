@@ -56,7 +56,7 @@ Here are the options you can pass to *zigfy* (with their default value):
     * *flash*,
     * or an object with the three following function: `{init, before, after}`, see jquery.zigfy.js implementation of *fade* and *flash* to make your own
   * **showNav**: `true` - whether to show the left / right navigation buttons
-  * **navFunc**: `null` - navigation function `function(lastIndex, currentIndex, imageCount, dir)` which must return the new index (default is normal +1/-1 looping navigation) where
+  * **navFunc**: `null` - navigation function `function(lastIndex, currentIndex, imageCount, dir)` returning the new index where
     * `lastIndex` is the last navigated index (`-1` at the beginning)
     * `currentIndex` is the current index
     * `imageCount` is the number of images in the gallery
