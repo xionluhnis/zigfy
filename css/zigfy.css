@@ -3,6 +3,7 @@
   background: #333;
 }
 .zigfy img {
+  display: none;
   border: 5px solid white;
 }
 .zigfy-cover {
