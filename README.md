@@ -112,11 +112,11 @@ That's ... soon coming!
 
 Timeline
 ========
-**0.3** - autoNav has been added (no timing-bar yet), commit 3d7e9532a29aa078dffa94167d27e0a7dd590f72
+**0.3** - autoNav has been added (no timing-bar yet), as of [commit](3d7e9532a29aa078dffa94167d27e0a7dd590f72)
 
-**0.2** - customization, parameters and configuration, commit bd0540406b5664f81c14568fa3251e52042699bf
+**0.2** - customization, parameters and configuration, as of [commit](bd0540406b5664f81c14568fa3251e52042699bf)
 
-**0.1** - base code for zigfy, commit f0891e67b4e206ee6861a218be95d6edfddd76f7
+**0.1** - base code for zigfy, as of [commit](f0891e67b4e206ee6861a218be95d6edfddd76f7)
 
 Future things
 =============
