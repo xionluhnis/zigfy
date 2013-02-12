@@ -110,12 +110,21 @@ Examples
 ========
 That's ... soon coming!
 
+Timeline
+========
+**0.3** - autoNav has been added (no timing-bar yet)
+
+**0.2** - customization, parameters and configuration
+
+**0.1** - base code for zigfy
+
 Future things
 =============
-I am thinking of adding an auto-navigation (like gallery auto-play) mode, with possibly a bar showing the timing.
-This would be the next feature.
+  * Maybe add a timing bar for autoNav
+  * Toggle between layout modes (next)
+  * Maybe a navigation button for layouts
 
-But of course, bugs are important.
+And of course, bugs are important.
 
 License
 =======
