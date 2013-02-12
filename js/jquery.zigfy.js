@@ -1,5 +1,5 @@
 // zigfy, Z Image Gallery plugin for JQuery
-// version 0.2
+// version 0.3
 // (c) 2013 Alexandre Kaspar [xion.luhnis@gmail.com]
 // released under the MIT license
 
