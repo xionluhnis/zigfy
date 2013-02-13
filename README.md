@@ -96,6 +96,14 @@ Here follow the most important ones:
   * **prev**, **next**: manually switch to the prev, or next image
   * **layout**: request layout of the current picture
   * **toggleNavigation**: manually toggle the navigation of pictures (`mapMode=true` is required)
+  * **switchLayout**: manually request a change of layout type
+
+You can pass arguments after the action name. For example, to switch the layout for a specific one (and not the original one):
+```javascript
+$('.zigfy').zigfy('switchLayout', 'full');
+// or even
+$('.zigfy').zigfy('switchLayout', myGreatLayoutFunction);
+```
 
 Classes
 =======
@@ -105,6 +113,7 @@ Several elements are used by *zigfy*, you can customize their look using CSS and
   * `.zigfy-loading` is set on the base element while images are loading, but see also `.zigfy-loaded`
   * `.zigfy-loaded` is set definitely on the base element after the first element has been laid out
   * `.zigfy-maps` is the cover for *mapMode* navigation (see zigfy.css)
+  * `.zigfy-maximize`, `.zigfy-full` or `.zigfy-custom` (custom function) are classes of the container set by layouts
 
 Examples
 ========
@@ -112,6 +121,9 @@ That's ... soon coming!
 
 Timeline
 ========
+
+**0.3.1** - switchLayout action added, possibility to pass arguments to actions, CSS layout classes, as of last commit
+
 **0.3** - autoNav has been added (no timing-bar yet), as of commit 3d7e9532a29aa078dffa94167d27e0a7dd590f72
 
 **0.2** - customization, parameters and configuration, as of commit bd0540406b5664f81c14568fa3251e52042699bf
@@ -121,8 +133,10 @@ Timeline
 Future things
 =============
   * Maybe add a timing bar for autoNav
-  * Toggle between layout modes (next)
   * Maybe a navigation button for layouts
+  * Navigating using press / release instead of click / click
+  * Having click mapped to some other action (maybe layout change or link to full file)
+  * Maybe overview with thumbnails
 
 And of course, bugs are important.
 

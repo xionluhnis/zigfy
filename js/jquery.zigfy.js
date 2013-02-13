@@ -1,5 +1,5 @@
 // zigfy, Z Image Gallery plugin for JQuery
-// version 0.3
+// version 0.3.1
 // (c) 2013 Alexandre Kaspar [xion.luhnis@gmail.com]
 // released under the MIT license
 
@@ -57,15 +57,15 @@
     var $el = this.$el = $(element);
     this.options = options;
     // we force-set the zigfy class
-    if(!options.noClass) $el.addClass('zigfy');
+    if (!options.noClass) $el.addClass('zigfy');
     // loading class
     $el.addClass('zigfy-loading');
     // we want an event namespace for this object
-    var eNS = this.__eventNS = options.eventNamespace === null ?  '.zigfy-' + Math.random() : options.eventNamespace;
+    var eNS = this.__eventNS = options.eventNamespace === null ? '.zigfy-' + Math.random() : options.eventNamespace;
 
     // prev/next navigation function
-    this.navFunc = options.navFunc || function(lastIndex, index, imageCount, dir){
-      if(dir > 0) return index >= imageCount - 1 ? 0 : index + 1;
+    this.navFunc = options.navFunc || function (lastIndex, index, imageCount, dir) {
+      if (dir > 0) return index >= imageCount - 1 ? 0 : index + 1;
       else return index <= 0 ? imageCount - 1 : index - 1;
     };
 
@@ -81,10 +81,7 @@
     self.lastIndex = -1;
 
     // layout
-    var layout;
-    if (typeof options.layout == 'function') layout = options.layout;
-    else layout = self[options.layout + 'Layout'] || self.maximizeLayout;
-    self.layout = layout.bind(self);
+    self.switchLayout(options.layout, true);
 
     // alignment
     if (['topleft', 'top', 'topright', 'left', 'center', 'right', 'bottomleft', 'bottom', 'bottomright'].indexOf(options.align) === -1) {
@@ -194,17 +191,17 @@
     /**
      * Global listener clear function
      */
-    clear: function(){
+    clear: function () {
       var eNS = this.__eventNS;
-      if(!eNS) return;
+      if (!eNS) return;
       $(window).off('resize' + eNS);
-      if(this.navPrev) this.navPrev.off('click' + eNS);
-      if(this.navNext) this.navNext.off('click' + eNS);
-      $(this.images).each(function(){
+      if (this.navPrev) this.navPrev.off('click' + eNS);
+      if (this.navNext) this.navNext.off('click' + eNS);
+      $(this.images).each(function () {
         $(this).off('click' + eNS);
       });
       var $cover = this.$cover;
-      if($cover){
+      if ($cover) {
         $cover.off('click' + eNS).off('mousemove' + eNS);
       }
       // clearing timeout
@@ -224,6 +221,34 @@
       // the hack way for other cases (cache, error)
       var $img = self.images[index];
       return $img.readyState || $img.complete;
+    },
+
+    /**
+     * Switch to a new layout mode
+     *
+     * @param newLayout the personallized method or the name of the layout (or nothing)
+     * @param noLayout whether to omit re-layout
+     */
+    switchLayout: function (newLayout, noLayout) {
+      var self = this;
+      // no more the last layout
+      if (self.lastLayoutClass) self.$el.removeClass(self.lastLayoutClass);
+      // default to the original layout
+      if (!newLayout) newLayout = self.options.layout;
+      // the layout function
+      var layout;
+      if (typeof newLayout == 'function') {
+        layout = newLayout;
+        self.$el.addClass(self.lastLayoutClass = 'zigfy-custom'); // special class name
+      } else {
+        // named layout
+        layout = self[newLayout + 'Layout'];
+        self.$el.addClass(self.lastLayoutClass = 'zigfy-' + newLayout);
+      }
+      self.layout = layout.bind(self); // binding to this
+
+      // we should probably do some layout now
+      if (!noLayout) self.layout();
     },
 
     /**
@@ -249,7 +274,6 @@
       // default css
       // Note: we only use top/left, not right/bottom!
       $img.css({
-        'border': 0,
         'margin': 0,
         'position': 'absolute',
         'height': 'auto',
@@ -412,15 +436,15 @@
 
     postInit: function () {
       var self = this;
-      this.transition.after.call(this, function(){
+      this.transition.after.call(this, function () {
         self.$el.removeClass('zigfy-loading').addClass('zigfy-loaded');
         // autoNav
-        if(self.options.autoNav && self.images.length >= 2){
+        if (self.options.autoNav && self.images.length >= 2) {
           // Note: we don't do autoNav if there is only 1 image!
           // no retriggering!
           clearTimeout(self.autoNavTO);
           // delayed call
-          self.autoNavTO = setTimeout(function(){
+          self.autoNavTO = setTimeout(function () {
             self.next();
           }, self.options.autoNavDuration);
         }
@@ -523,7 +547,7 @@
       return this.data('zigfy');
     } else if (typeof options == 'string') {
       var zigfy = this.data('zigfy');
-      if (zigfy) zigfy[options]();
+      if (zigfy) zigfy[options].apply(zigfy, Array.prototype.slice.call(arguments, 1));
       return this;
     }
 
@@ -531,10 +555,10 @@
 
     // HTML data options
     var $el = this;
-    for(var key in $.fn.zigfy.defaults){
+    for (var key in $.fn.zigfy.defaults) {
       var val = $el.data('zigfy-' + key);
-      if(val){
-        switch(typeof $.fn.zigfy.defaults[key]){
+      if (val) {
+        switch (typeof $.fn.zigfy.defaults[key]) {
           case 'boolean':
             console.log('key=' + key + ', val=' + val + ', def=' + $.fn.zigfy.defaults[key]);
             options[key] = $.parseJSON(val.toString());
@@ -568,6 +592,7 @@
   $.fn.zigfy.defaults = {
     resize: false, // whether to respond to resize events automatically
     layout: 'maximize', // or 'full' to show the full picture, in reduced size
+    layouts: ['maximize', 'full'], // the list of layouts to consider when switching without argument
     align: 'center', // or 'topleft', 'top', 'topright', 'left', 'right', 'bottomleft', 'bottom', 'bottomright'
     transition: 'fade', // or 'flash', or {init, before, after}
     showNav: true, // for the left / right navigation buttons

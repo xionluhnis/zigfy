@@ -4,6 +4,11 @@
 }
 .zigfy img {
   display: none;
+}
+.zigfy-maximize img {
+  border: 0;
+}
+.zigfy-full img {
   border: 5px solid white;
 }
 .zigfy-cover {
