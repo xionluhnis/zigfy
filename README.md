@@ -132,13 +132,14 @@ Timeline
 
 Future things
 =============
+  * Mapping click to switchLayout, and mouseover/down to maps navigation
+  * Switch to **full** layout by default
   * Maybe add a timing bar for autoNav
   * Maybe a navigation button for layouts
-  * Navigating using press / release instead of click / click
-  * Having click mapped to some other action (maybe layout change or link to full file)
   * Maybe overview with thumbnails
+  * Maybe a link to the original image (or a corresponding image)
 
-And of course, bugs are important.
+And of course, debugging is important.
 
 License
 =======
