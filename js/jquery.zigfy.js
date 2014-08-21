@@ -130,12 +130,18 @@
       }).attr('src', $origImg.attr('src'));
       images.push($img);
 
+      // transfer size information if available
+      if($origImg.data('width')) $img.data('width', $origImg.data('width'));
+      else if($origImg.attr('width')) $img.data('width', $origImg.attr('width'));
+      if($origImg.data('height')) $img.data('height', $origImg.data('height'));
+      else if($origImg.attr('height')) $img.data('height', $origImg.attr('height'));
+
       // image loading
       var onLoad = function () {
         loaded[index] = true;
         dims[index] = {
-          height: $img.height(),
-          width: $img.width()
+          height: parseInt($img.data('height').replace('px', ''), 10) || $img.height(),
+          width: parseInt($img.data('width').replace('px', ''), 10) || $img.width()
         };
         // mapMode = map navigation on click
         if (options.mapMode) {
@@ -378,6 +384,7 @@
       var vertiPad = 2 * padding + b('top') + b('bottom');
       var fx = w / (W - horizPad);
       var fy = h / (H - vertiPad);
+      console.log("fx="+fx + ", fy=" + fy + ", w=" + w + ", W=" + W + ", h=" + h + ", H=" + H+", hpad=" + horizPad + ", vpad="+vertiPad);
 
       // defaults
       $img.css({
@@ -449,6 +456,17 @@
           }, self.options.autoNavDuration);
         }
       });
+    },
+
+    select: function(newIndex) {
+      var self = this;
+      var i = self.index;
+      if(i == newIndex) return;
+      self.index = newIndex;
+      self.lastIndex = i;
+      self.preInit();
+      self.layout();
+      if (self.isLoaded(self.index)) self.postInit();
     },
 
     prev: function () {
