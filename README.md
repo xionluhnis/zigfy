@@ -94,6 +94,7 @@ Actions are method calls of Zigfy javascript objects. To have the list of all po
 Here follow the most important ones:
   * **clear**: remove all listeners which have been attached to that specific zigfy object
   * **prev**, **next**: manually switch to the prev, or next image
+  * **select**: manually switch to an image given by its index
   * **layout**: request layout of the current picture
   * **toggleNavigation**: manually toggle the navigation of pictures (`mapMode=true` is required)
   * **switchLayout**: manually request a change of layout type
@@ -115,9 +116,11 @@ Several elements are used by *zigfy*, you can customize their look using CSS and
   * `.zigfy-maps` is the cover for *mapMode* navigation (see zigfy.css)
   * `.zigfy-maximize`, `.zigfy-full` or `.zigfy-custom` (custom function) are classes of the container set by layouts
 
-Examples
-========
-That's ... soon coming!
+TODO
+====
+
+  1. Debug full layout (some cases seem wrong)
+  2. Better image loading (now, navigation seems to reload pictures, not from cache!)
 
 Timeline
 ========
