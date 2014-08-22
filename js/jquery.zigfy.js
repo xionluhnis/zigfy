@@ -7,6 +7,20 @@
 
   // the available image transitions
   var transitions = {
+    none: {
+      init: function ( /* length */ ) {},
+      before: function () {},
+      after: function (callback) {
+        var self = this;
+        self.$el.scrollTop(0);
+        for (var i = 0; i < self.images.length; ++i) {
+          var $img = self.images[i];
+          // fade animation
+          if (i === self.index) $img.stop().show();
+          else $img.stop().hide();
+        }
+      }
+    },
     /**
      * Alpha transition
      */
