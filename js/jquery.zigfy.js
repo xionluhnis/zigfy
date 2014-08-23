@@ -423,12 +423,12 @@
         if (fy < 1) { // h too small too
           // centering vertically
           $img.css('height', H - vertiPad);
-          $img.css('top', padding + (H - h) / 2);
-          $img.css('width', W - horizPad);
+          $img.css('top', padding - b('top'));
+          $img.css('width', w / fy); // W - horizPad);
           $img.css('left', padding + (W - w / fy) / 2 - b('left'));
         } else { // h ok
           $img.css('height', H - vertiPad);
-          $img.css('top', padding);
+          $img.css('top', padding - b('top'));
           $img.css('width', w / fy);
           $img.css('left', padding + (W - w / fy) / 2 - b('left'));
         }
@@ -437,13 +437,13 @@
         var FY = fy / fx;
         if (FY < 1) { // h too small now
           $img.css('width', w / fx);
-          $img.css('left', padding);
+          $img.css('left', padding - b('left'));
           $img.css('height', h / fx);
           $img.css('top', (H - h / fx) / 2 - b('top'));
         } else {
           // we shrink w since h / fx is fine
           $img.css('height', H - vertiPad);
-          $img.css('top', padding);
+          $img.css('top', padding - b('top'));
           $img.css('width', w / fy);
           $img.css('left', (W - w / fy) / 2 - b('left'));
         }
