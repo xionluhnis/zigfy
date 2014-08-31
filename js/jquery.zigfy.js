@@ -160,8 +160,8 @@
         // mapMode = map navigation on click
         if (options.mapMode) {
           $img.on('click' + eNS, function (e) {
-            e.preventDefault();
-            self.toggleNavigation();
+            self.toggleNavigation(e);
+            return false;
           });
         }
 
@@ -189,10 +189,12 @@
       // => prev: images.length + 1
       this.navPrev = $('<div class="zigfy-prev" />').css('z-index', images.length + 1).on('click' + eNS, function () {
         self.prev();
+        return false;
       }).appendTo($el);
       // => next: images.length + 2
       this.navNext = $('<div class="zigfy-next" />').css('z-index', images.length + 2).on('click' + eNS, function () {
         self.next();
+        return false;
       }).appendTo($el);
     }
     // mapMode
@@ -506,7 +508,7 @@
     /**
      * Toggle the maps navigation
      */
-    toggleNavigation: function () {
+    toggleNavigation: function (event) {
       var self = this;
       var eNS = this.__eventNS;
       var $cover = self.$cover;
@@ -520,6 +522,8 @@
         // and stop the navigation
         $cover.off('mousemove' + eNS);
         $cover.off('click' + eNS);
+        if($cover.mousewheel)
+          $cover.off('mousewheel' + eNS);
       } else {
         // we set the click back
         $cover.on('click' + eNS, self.toggleNavigation.bind(self));
@@ -527,7 +531,13 @@
         $cover.addClass('zigfy-maps').stop().fadeIn(500);
         $cover.css('cursor', 'move');
         // and bind the navigation event
+        self.lastMousePos = {
+          x: event.pageX,
+          y: event.pageY
+        };
         $cover.on('mousemove' + eNS, self.navigate.bind(self));
+        if($cover.mousewheel)
+          $cover.on('mousewheel' + eNS, self.navigate.bind(self));
       }
 
       // we switch the mode
@@ -552,21 +562,65 @@
       var $img = self.images[self.index];
       var w = $img.width();
       var h = $img.height();
-      var range, scroll;
-
-      // the gap in y
-      if (h > H) {
-        var fy = e.pageY / H;
-        range = h - H;
-        scroll = range * self.distF(fy);
-        $img.css('top', -scroll);
+      // wheel
+      if(e.deltaX || e.deltaY) {
+        var minPos, newPos;
+        var dir = e.deltaX || e.deltaY;
+        var delta = self.options.mapDeltaFactor || 42;
+        if(h > H) {
+          minPos = H - h;
+          newPos = parseInt($img.css('top').replace('px', '')) + dir * delta;
+          if(newPos > 0) newPos = 0;
+          if(newPos < minPos) newPos = minPos;
+          $img.css('top', newPos);
+        }
+        if(w > W) {
+          minPos = W - w;
+          newPos = parseInt($img.css('left').replace('px', '')) + dir * delta;
+          if(newPos > 0) newPos = 0;
+          if(newPos < minPos) newPos = minPos;
+          $img.css('left', newPos);
+        }
+        return false;
       }
-      // the gap in x
-      if (w > W) {
-        var fx = e.pageX / W;
-        range = w - W;
-        scroll = range * self.distF(fx);
-        $img.css('left', -scroll);
+      if(self.options.mapRelative){
+        var delta, newPos, minPos;
+        var dir = self.options.mapReverse ? -1 : 1;
+        // relative shift
+        if(h > H) {
+          minPos = H - h;
+          delta = e.pageY - self.lastMousePos.y;
+          newPos = parseInt($img.css('top').replace('px', '')) + dir * delta;
+          if(newPos > 0) newPos = 0;
+          if(newPos < minPos) newPos = minPos;
+          $img.css('top', newPos);
+          self.lastMousePos.y = e.pageY;
+        }
+        if(w > W) {
+          minPos = W - w;
+          delta = e.pageX - self.lastMousePos.x;
+          newPos = parseInt($img.css('left').replace('px', '')) + dir * delta;
+          if(newPos > 0) newPos = 0;
+          if(newPos < minPos) newPos = minPos;
+          $img.css('left', newPos);
+          self.lastMousePos.x = e.pageX;
+        }
+      } else {
+        var range, scroll;
+        // the gap in y
+        if (h > H) {
+          var fy = e.pageY / H;
+          range = h - H;
+          scroll = range * self.distF(fy);
+          $img.css('top', -scroll);
+        }
+        // the gap in x
+        if (w > W) {
+          var fx = e.pageX / W;
+          range = w - W;
+          scroll = range * self.distF(fx);
+          $img.css('left', -scroll);
+        }
       }
     }
 
@@ -628,12 +682,16 @@
     align: 'center', // or 'topleft', 'top', 'topright', 'left', 'right', 'bottomleft', 'bottom', 'bottomright'
     transition: 'fade', // or 'flash', or {init, before, after}
     showNav: true, // for the left / right navigation buttons
+    showLayout: true, // for the full / maximize layout button
     navFunc: null, // navigation function (return new index = function(last, curr, imageCount, dir))
     autoNav: false, // whether to have automatic navigation
     autoNavBar: false, // whether to show a countdown navigation bar (only when autoNav == true) XXX to implement!
     autoNavDuration: 12000, // timing for autoNav == true
     padding: 10, // to override CSS padding in 'full' mode, not used in 'zoom' mode
     mapMode: true, // whether to enable clicking to grab and see more, only for the 'zoom' mode
+    mapRelative: true, // whether grab position is relative (or absolute if false)
+    mapReverse: false, // whether to reverse the grab direction
+    mapWheelDelta: 50, // delta factor to use
     imgSelector: null, // the image selector (null => img in HTML target)
     noClass: false, // disable .zigfy CSS class auto-added to base element
     eventNamespace: null // event namespace to use (by default a randomly generated .zigfy-{random} one
