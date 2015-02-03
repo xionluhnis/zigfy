@@ -7,7 +7,8 @@ What you need
 =============
 `zigfy` is a JQuery plugin. Thus you obviously want to have JQuery (and you should include it before including *zigfy*).
 You need to include the CSS and Javascript files (as well as image resources if you want to use the same):
-  * `jquery.zigfy.js` - the actual Javascript extension
+  * `img.preload.js` - an extension for jquery to preload images
+  * `jquery.zigfy.js` - the actual Javascript gallery extension
   * `zigfy.css` - the basic style for *zigfy*
 
 And that's it!
@@ -69,6 +70,7 @@ Here are the options you can pass to *zigfy* (with their default value):
   * **imgSelector**: `null` - the image selector to use instead of the element's images
   * **noClass**: `false` - disable the automatic `zigfy` CSS class added to the base element
   * **eventNamespace**: `null` - set the zigfy event namespace (used by `clear()`), by default `.zigfy-{Math.random()}`
+  * **onLoad**: `function(img){}` - callback when gallery images have been loaded with `img.preload.js`
 
 All the *boolean*, *string* and *number* options (of name `XXX`) can be passed via HTML using data paremeters `data-zigfy`.
 
@@ -125,6 +127,8 @@ TODO
 Timeline
 ========
 
+**0.4** - integrated a preloader `img.preloader.js` and changed full layout click to trigger `next`
+
 **0.3.1** - switchLayout action added, possibility to pass arguments to actions, CSS layout classes, as of last commit
 
 **0.3** - autoNav has been added (no timing-bar yet), as of commit 3d7e9532a29aa078dffa94167d27e0a7dd590f72
@@ -135,7 +139,6 @@ Timeline
 
 Future things
 =============
-  * Mapping click to switchLayout, and mouseover/down to maps navigation
   * Switch to **full** layout by default
   * Maybe add a timing bar for autoNav
   * Maybe a navigation button for layouts
@@ -150,4 +153,4 @@ The code is released under the MIT license, as is.
 
 Others
 ======
-If you have questions, request or saw issues, don't hesitate.
+If you have questions, request or find issues, don't hesitate.

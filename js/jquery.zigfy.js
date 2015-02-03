@@ -130,39 +130,48 @@
     var dims = self.dims = {};
     $el.children().remove();
     $imgs.each(function () {
-      var $origImg = $(this);
       var index = images.length;
       // pre-init stuff
       if (index === self.index) self.preInit();
 
-      // image creation
-      var $img = $('<img />').data('index', index).css({
+      // data storage
+      var $img = $(this);
+      $img.data('index', index).css({
         'display': 'none', // we only show the first one by default
         'height': 'auto',
         'width': 'auto',
         'z-index': index + 1
-      }).attr('src', $origImg.attr('src'));
+      });
       images.push($img);
-
-      // transfer size information if available
-      if($origImg.data('width')) $img.data('width', $origImg.data('width'));
-      else if($origImg.attr('width')) $img.data('width', $origImg.attr('width'));
-      if($origImg.data('height')) $img.data('height', $origImg.data('height'));
-      else if($origImg.attr('height')) $img.data('height', $origImg.attr('height'));
 
       // image loading
       var onLoad = function () {
         loaded[index] = true;
+        var h = $img.data('height') || $img.attr('height');
+        var w = $img.data('width') || $img.attr('width');
         dims[index] = {
-          height: parseInt($img.data('height').replace('px', ''), 10) || $img.height(),
-          width: parseInt($img.data('width').replace('px', ''), 10) || $img.width()
+          height: parseInt(h.replace('px', ''), 10) || $img.height(),
+          width: parseInt(w.replace('px', ''), 10) || $img.width()
         };
         // mapMode = map navigation on click
         if (options.mapMode) {
           $img.on('click' + eNS, function (e) {
-            self.toggleNavigation(e);
+            switch(self.lastLayoutClass){
+                case 'zigfy-full':
+                    self.next(); // go to next image
+                    break;
+                case 'zigfy-maximize':
+                default:
+                    self.toggleNavigation(e); // toggle navigation
+                    break;
+            }
             return false;
           });
+        }
+
+        // custom onLoad
+        if(options.onLoad){
+            options.onLoad($img);
         }
 
         // are we the target image?
@@ -175,12 +184,17 @@
 
         // done loading
       };
+      $img.data('loaded', onLoad);
+
       // onLoad hook
-      if (self.isLoaded(index)) onLoad();
-      else $img.load(onLoad);
+      $img.preload({
+          priority: -1, // lower priority than default
+          loaded: onLoad
+      });
 
       // image in the DOM
       $el.append($img);
+
     });
 
     // navigation
@@ -477,7 +491,10 @@
     select: function(newIndex) {
       var self = this;
       var i = self.index;
-      if(i == newIndex) return;
+      if(i == newIndex){
+          self.images[i].show();
+          return;
+      }
       self.index = newIndex;
       self.lastIndex = i;
       self.preInit();
@@ -676,25 +693,26 @@
   };
 
   $.fn.zigfy.defaults = {
-    resize: false, // whether to respond to resize events automatically
-    layout: 'maximize', // or 'full' to show the full picture, in reduced size
-    layouts: ['maximize', 'full'], // the list of layouts to consider when switching without argument
-    align: 'center', // or 'topleft', 'top', 'topright', 'left', 'right', 'bottomleft', 'bottom', 'bottomright'
-    transition: 'fade', // or 'flash', or {init, before, after}
-    showNav: true, // for the left / right navigation buttons
-    showLayout: true, // for the full / maximize layout button
-    navFunc: null, // navigation function (return new index = function(last, curr, imageCount, dir))
-    autoNav: false, // whether to have automatic navigation
-    autoNavBar: false, // whether to show a countdown navigation bar (only when autoNav == true) XXX to implement!
-    autoNavDuration: 12000, // timing for autoNav == true
-    padding: 10, // to override CSS padding in 'full' mode, not used in 'zoom' mode
-    mapMode: true, // whether to enable clicking to grab and see more, only for the 'zoom' mode
-    mapRelative: true, // whether grab position is relative (or absolute if false)
-    mapReverse: false, // whether to reverse the grab direction
-    mapWheelDelta: 50, // delta factor to use
-    imgSelector: null, // the image selector (null => img in HTML target)
-    noClass: false, // disable .zigfy CSS class auto-added to base element
-    eventNamespace: null // event namespace to use (by default a randomly generated .zigfy-{random} one
+    resize: false,                  // whether to respond to resize events automatically
+    layout: 'maximize',             // or 'full' to show the full picture, in reduced size
+    layouts: ['maximize', 'full'],  // the list of layouts to consider when switching without argument
+    align: 'center',                // or 'topleft', 'top', 'topright', 'left', 'right', 'bottomleft', 'bottom', 'bottomright'
+    transition: 'fade',             // or 'flash', or {init, before, after}
+    showNav: true,                  // for the left / right navigation buttons
+    showLayout: true,               // for the full / maximize layout button
+    navFunc: null,                  // navigation function (return new index = function(last, curr, imageCount, dir))
+    autoNav: false,                 // whether to have automatic navigation
+    autoNavBar: false,              // whether to show a countdown navigation bar (only when autoNav == true) XXX to implement!
+    autoNavDuration: 12000,         // timing for autoNav == true
+    padding: 10,                    // to override CSS padding in 'full' mode, not used in 'zoom' mode
+    mapMode: true,                  // whether to enable clicking to grab and see more, only for the 'zoom' mode
+    mapRelative: true,              // whether grab position is relative (or absolute if false)
+    mapReverse: false,              // whether to reverse the grab direction
+    mapWheelDelta: 50,              // delta factor to use
+    imgSelector: null,              // the image selector (null => img in HTML target)
+    noClass: false,                 // disable .zigfy CSS class auto-added to base element
+    eventNamespace: null,           // event namespace to use (by default a randomly generated .zigfy-{random} one
+    onLoad: function(img){}         // action on image loading
   };
 
   // Overwrite this method to provide options on a per-element basis.
