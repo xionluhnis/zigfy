@@ -118,6 +118,26 @@ Several elements are used by *zigfy*, you can customize their look using CSS and
   * `.zigfy-maps` is the cover for *mapMode* navigation (see zigfy.css)
   * `.zigfy-maximize`, `.zigfy-full` or `.zigfy-custom` (custom function) are classes of the container set by layouts
 
+Preloader
+=========
+`img.preload.js` is an extension for jQuery to handle image preloading.
+
+Here are examples of its use:
+
+```javascript
+// preload every image with the same priority
+$('img').preload();
+
+// preload images with specific options
+$('.gallery img').preload({
+  priority: 1,  // default=0
+  timeout: 0.1, // default=0
+  loaded: function($img){
+    $img.fadeIn(); // assuming they would be hidden before
+  }
+});
+```
+
 TODO
 ====
 
